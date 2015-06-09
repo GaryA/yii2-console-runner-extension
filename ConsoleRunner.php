@@ -12,7 +12,7 @@ use yii\base\InvalidConfigException;
  * Usage:
  * ```
  * ...
- * $cr = new ConsoleRunner(['file' => '@my/path/to/yii']);
+ * $cr = new ConsoleRunner(['file' => '@my/path/to/yii', 'php' => 'c:\path\to\php.exe']);
  * $cr->run('controller/action param1 param2 ...');
  * ...
  * ```
@@ -24,6 +24,7 @@ use yii\base\InvalidConfigException;
  *     'consoleRunner' => [
  *         'class' => 'vova07\console\ConsoleRunner',
  *         'file' => '@my/path/to/yii' // or an absolute path to console file
+ *         'php' => 'c:\path\to\php.exe // needed for Windows
  *     ]
  * ]
  * ...
@@ -41,6 +42,12 @@ class ConsoleRunner extends Component
     public $file;
 
     /**
+	 * @var string PHP executable including full path
+	 * Needed because PHP_BINDIR and PHP_BINARY do not work properly under Windows
+	 */
+	public $php;
+	
+    /**
      * @inheritdoc
      */
     public function init()
@@ -50,6 +57,9 @@ class ConsoleRunner extends Component
         if ($this->file === null) {
             throw new InvalidConfigException('The "file" property must be set.');
         }
+		if (($this->isWindows() === true) && ($this->php === null));
+		    throw new InvalidConfigException('The "php" property must be set when running under Windows.');
+	    }
     }
 
     /**
@@ -60,10 +70,11 @@ class ConsoleRunner extends Component
      */
     public function run($cmd)
     {
-        $cmd = PHP_BINDIR . '/php ' . Yii::getAlias($this->file) . ' ' . $cmd;
         if ($this->isWindows() === true) {
+            $cmd = $this->php . ' ' . Yii::getAlias($this->file) . ' ' . $cmd;
             pclose(popen('start /b ' . $cmd, 'r'));
         } else {
+            $cmd = PHP_BINDIR . '/php ' . Yii::getAlias($this->file) . ' ' . $cmd;
             pclose(popen($cmd . ' > /dev/null &', 'r'));
         }
         return true;
