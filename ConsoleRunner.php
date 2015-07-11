@@ -42,11 +42,11 @@ class ConsoleRunner extends Component
     public $file;
 
     /**
-	 * @var string PHP executable including full path
-	 * Needed because PHP_BINDIR and PHP_BINARY do not work properly under Windows
-	 */
-	public $php;
-	
+     * @var string PHP executable including full path
+     * Needed because PHP_BINDIR and PHP_BINARY do not work properly under Windows
+     */
+    public $php;
+    
     /**
      * @inheritdoc
      */
@@ -57,9 +57,9 @@ class ConsoleRunner extends Component
         if ($this->file === null) {
             throw new InvalidConfigException('The "file" property must be set.');
         }
-		if (($this->isWindows() === true) && ($this->php === null));
-		    throw new InvalidConfigException('The "php" property must be set when running under Windows.');
-	    }
+        if (($this->isWindows() === true) && ($this->php === null))    
+            throw new InvalidConfigException('The "php" property must be set when running under Windows.');
+        }
     }
 
     /**
