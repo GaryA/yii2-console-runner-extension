@@ -54,10 +54,12 @@ class ConsoleRunner extends Component
     {
         parent::init();
 
-        if ($this->file === null) {
+        if ($this->file === null)
+		{
             throw new InvalidConfigException('The "file" property must be set.');
         }
-        if (($this->isWindows() === true) && ($this->php === null))    
+        if (($this->isWindows() === true) && ($this->php === null))
+		{
             throw new InvalidConfigException('The "php" property must be set when running under Windows.');
         }
     }
@@ -70,10 +72,12 @@ class ConsoleRunner extends Component
      */
     public function run($cmd)
     {
-        if ($this->isWindows() === true) {
+        if ($this->isWindows() === true)
+		{
             $cmd = $this->php . ' ' . Yii::getAlias($this->file) . ' ' . $cmd;
             pclose(popen('start /b ' . $cmd, 'r'));
-        } else {
+        } else
+		{
             $cmd = PHP_BINDIR . '/php ' . Yii::getAlias($this->file) . ' ' . $cmd;
             pclose(popen($cmd . ' > /dev/null &', 'r'));
         }
@@ -87,9 +91,11 @@ class ConsoleRunner extends Component
      */
     protected function isWindows()
     {
-        if (PHP_OS == 'WINNT' || PHP_OS == 'WIN32') {
+        if (PHP_OS == 'WINNT' || PHP_OS == 'WIN32')
+		{
             return true;
-        } else {
+        } else
+		{
             return false;
         }
     }
